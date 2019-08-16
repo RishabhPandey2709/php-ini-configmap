@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php-apache-deployment
+  labels:
+    app: php
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: php
+  template:
+    metadata:
+      labels:
+        app: php
+    spec:
+      containers:
+      - name: php
+        image: imrishabh27/web-php:first
+        env:
+          - name: PHP_INI_SCAN_DIR
+            value: :/etc/php/7.2/fpm/conf.d
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: php-config
+            mountPath: /etc/php/7.2/fpm/conf.d
+      
+      volumes:
+        - name: php-config
+          configMap:
+            name: php-config
